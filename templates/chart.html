@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <h1>Chart of Pinned Restaurants</h1>
+  <canvas id="myChart"></canvas>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='chart.js') }}"></script>
+  <script>
+    var counts = JSON.parse('{{ counts | tojson | safe }}');
+    var labels = counts.map(c => c[0]);
+    var data = counts.map(c => c[1]);
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Number of Pins',
+          data: data,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+{% endblock %}
